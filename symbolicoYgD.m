@@ -158,15 +158,15 @@ for i=1:3
 end
 
 
-hp=[Pps_a,Pps_b,Pps_c,Psp_a,Psp_b,Psp_c]
-hq=[Qps_a,Qps_b,Qps_c,Qsp_a,Qsp_b,Qsp_c]
+hp=[Pps_a,Pps_b,Pps_c,Psp_a,Psp_b,Psp_c];
+hq=[Qps_a,Qps_b,Qps_c,Qsp_a,Qsp_b,Qsp_c];
 
 H=jacobian(hp,[tetap tetas Vp Vs]);
 
-H=simplify(H)
+H=simplify(H);
 
 GradPps_a=gradient(Pps_a,[tetap tetas Vp Vs]);
-GradPps_a=subs(GradPps_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1])
+GradPps_a=subs(GradPps_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1]);
 
 
 %% fluxo direto
@@ -198,7 +198,7 @@ GradPps_a=subs(GradPps_a,[Bss(1,3) Gss(1,3) Bpp(1,3) Gpp(1,3)],[-auxb -auxg 0 0]
 
 
 GradPsp_a=gradient(Psp_a,[tetap tetas Vp Vs]);
-GradPsp_a=subs(GradPsp_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1])
+GradPsp_a=subs(GradPsp_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1]);
 
 
 
