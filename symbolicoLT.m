@@ -9,6 +9,9 @@ Gps=sym("Gps",[3 3]);
 Gsp=sym("Gsp",[3 3]);
 Gss=sym("Gss",[3 3]);
 
+G=sym("G",[3 3]);
+B=sym("B",[3 3]);
+
 Bpp=sym("Bpp",[3 3]);
 Bps=sym("Bps",[3 3]);
 Bsp=sym("Bsp",[3 3]);
@@ -171,57 +174,30 @@ GradPps_a=subs(GradPps_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1])
 
 %% fluxo direto
 %elementos da diagonal dos quadripolos
-auxg=Gt*2/3;
-auxb=Bt*2/3;
 %ss e pp
-GradPps_a=subs(GradPps_a,[Bss(1,1) Gss(1,1) Bpp(1,1) Gpp(1,1)],[auxb auxg auxb auxg]);
-%sp e ps
-auxg=Gt*sqrt(3)/3;
-auxb=Bt*sqrt(3)/3;
-GradPps_a=subs(GradPps_a,[Bsp(1,1) Gsp(1,1) Bps(1,1) Gps(1,1)],[-auxb -auxg -auxb -auxg]);
-%elementos fora da diagonal dos quadripolos 
-auxg=Gt*sqrt(3)/3;
-auxb=Bt*sqrt(3)/3;
-%a b
-GradPps_a=subs(GradPps_a,[Bsp(1,2) Gsp(1,2) Bps(1,2) Gps(1,2)],[0 0 auxb auxg]);
-%a c
-GradPps_a=subs(GradPps_a,[Bsp(1,3) Gsp(1,3) Bps(1,3) Gps(1,3)],[auxb auxg 0 0]);
+GradPps_a=subs(GradPps_a,Bss,B);
+GradPps_a=subs(GradPps_a,Bpp,B);
+GradPps_a=subs(GradPps_a,Gss,G);
+GradPps_a=subs(GradPps_a,Gpp,G);
+GradPps_a=subs(GradPps_a,Bsp,-B);
+GradPps_a=subs(GradPps_a,Bps,-B);
+GradPps_a=subs(GradPps_a,Gsp,-G);
+GradPps_a=subs(GradPps_a,Gps,-G);
 
-auxg=Gt/3;
-auxb=Bt/3;
-
-GradPps_a=subs(GradPps_a,[Bss(1,2) Gss(1,2) Bpp(1,2) Gpp(1,2)],[-auxb -auxg -auxb -auxg]);
-GradPps_a=subs(GradPps_a,[Bss(1,3) Gss(1,3) Bpp(1,3) Gpp(1,3)],[-auxb -auxg -auxb -auxg]);
 
 
 %% fluxo inverso
 
 
 GradPsp_a=gradient(Psp_a,[tetap tetas Vp Vs]);
-GradPsp_a=subs(GradPsp_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1])
+GradPsp_a=subs(GradPsp_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1]);
 
 
-
-%elementos da diagonal dos quadripolos
-auxg=Gt*2/3;
-auxb=Bt*2/3;
-%ss e pp
-GradPsp_a=subs(GradPsp_a,[Bss(1,1) Gss(1,1) Bpp(1,1) Gpp(1,1)],[auxb auxg auxb auxg]);
-%sp e ps
-auxg=Gt*sqrt(3)/3;
-auxb=Bt*sqrt(3)/3;
-GradPsp_a=subs(GradPsp_a,[Bsp(1,1) Gsp(1,1) Bps(1,1) Gps(1,1)],[-auxb -auxg -auxb -auxg]);
-%elementos fora da diagonal dos quadripolos 
-auxg=Gt*sqrt(3)/3;
-auxb=Bt*sqrt(3)/3;
-%a b
-GradPsp_a=subs(GradPsp_a,[Bsp(1,2) Gsp(1,2) Bps(1,2) Gps(1,2)],[0 0 auxb auxg]);
-%a c
-GradPsp_a=subs(GradPsp_a,[Bsp(1,3) Gsp(1,3) Bps(1,3) Gps(1,3)],[auxb auxg 0 0]);
-
-auxg=Gt/3;
-auxb=Bt/3;
-
-GradPsp_a=subs(GradPsp_a,[Bss(1,2) Gss(1,2) Bpp(1,2) Gpp(1,2)],[-auxb -auxg -auxb -auxg]);
-GradPsp_a=subs(GradPsp_a,[Bss(1,3) Gss(1,3) Bpp(1,3) Gpp(1,3)],[-auxb -auxg -auxb -auxg]);
-
+GradPsp_a=subs(GradPsp_a,Bss,B);
+GradPsp_a=subs(GradPsp_a,Bpp,B);
+GradPsp_a=subs(GradPsp_a,Gss,G);
+GradPsp_a=subs(GradPsp_a,Gpp,G);
+GradPsp_a=subs(GradPsp_a,Bsp,-B);
+GradPsp_a=subs(GradPsp_a,Bps,-B);
+GradPsp_a=subs(GradPsp_a,Gsp,-G);
+GradPsp_a=subs(GradPsp_a,Gps,-G);
