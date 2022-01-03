@@ -19,9 +19,12 @@ tetap=[tetap_a,tetap_b,tetap_c];
 tetas=[tetas_a,tetas_b,tetas_c];
 Vp=[Vp_a, Vp_b, Vp_c];
 Vs=[Vs_a, Vs_b, Vs_c];
-teta3phs=[0 -120 120]*pi/180
+teta3ph_p=[0 -120 120]*pi/180;
+teta3ph_s=[-30 -150 90]*pi/180;
 
-%% fluxo direto
+%% fluxo de potência ativa de p para s 
+
+%fase a 
 
 Pps_a=(Vp(1)^2)*Gpp(1,1);
 
@@ -33,6 +36,7 @@ for i=1:3
   Pps_a=Pps_a+Vp(1)*Vs(i)*(Gps(1,i)*cos(tetap(1)-tetas(i))+Bps(1,i)*sin(tetap(1)-tetas(i)));
 end
 
+%fase b
 Pps_b=(Vp(2)^2)*Gpp(2,2);
 
 for i=[1,3]
@@ -43,7 +47,7 @@ for i=1:3
   Pps_b=Pps_b+Vp(2)*Vs(i)*(Gps(2,i)*cos(tetap(2)-tetas(i))+Bps(2,i)*sin(tetap(2)-tetas(i)));
 end
 
-
+%fase c
 Pps_c=(Vp(3)^2)*Gpp(3,3);
 
 for i=[1,2]
@@ -55,7 +59,9 @@ for i=1:3
 end
 
 
-%% fluxo inverso
+%% fluxo de potência ativa de s para p
+
+%fase a
 
 Psp_a=(Vs(1)^2)*Gss(1,1);
 
@@ -67,6 +73,7 @@ for i=1:3
   Psp_a=Psp_a+Vs(1)*Vp(i)*(Gsp(1,i)*cos(tetas(1)-tetap(i))+Bsp(1,i)*sin(tetas(1)-tetap(i)));
 end
 
+%fase b
 Psp_b=(Vs(2)^2)*Gss(2,2);
 
 for i=[1,3]
@@ -77,6 +84,7 @@ for i=1:3
   Psp_b=Psp_b+Vs(2)*Vp(i)*(Gsp(2,i)*cos(tetas(2)-tetap(i))+Bsp(2,i)*sin(tetas(2)-tetap(i)));
 end
 
+%fase c
 
 Psp_c=(Vs(3)^2)*Gss(3,3);
 
@@ -89,10 +97,9 @@ for i=1:3
 end
 
 
-%% reativo
+%% fluxo de potência reativa de p para s
 
-% fluxo direto
-
+%fase a 
 Qps_a=-(Vp(1)^2)*Bpp(1,1);
 
 for i=2:3
@@ -102,7 +109,7 @@ end
 for i=1:3
   Qps_a=Qps_a-Vp(1)*Vs(i)*(Bps(1,i)*cos(tetap(1)-tetas(i))-Gps(1,i)*sin(tetap(1)-tetas(i)));
 end
-
+%fase b
 Qps_b=-(Vp(2)^2)*Bpp(2,2);
 
 for i=[1,3]
@@ -113,7 +120,7 @@ for i=1:3
   Qps_b=Qps_b-Vp(2)*Vs(i)*(Bps(2,i)*cos(tetap(2)-tetas(i))-Gps(2,i)*sin(tetap(2)-tetas(i)));
 end
 
-
+%fase c
 Qps_c=-(Vp(3)^2)*Bpp(3,3);
 
 for i=[1,2]
@@ -124,8 +131,9 @@ for i=1:3
   Qps_c=Qps_c-Vp(3)*Vs(i)*(Bps(3,i)*cos(tetap(3)-tetas(i))-Gps(3,i)*sin(tetap(3)-tetas(i)));
 end
 
-% fluxo inverso
+%% fluxo de potência reativa de s para p
 
+%fase a
 Qsp_a=-(Vs(1)^2)*Bss(1,1);
 
 for i=2:3
@@ -136,6 +144,7 @@ for i=1:3
   Qsp_a=Qsp_a-Vs(1)*Vp(i)*(Bsp(1,i)*cos(tetas(1)-tetap(i))-Gsp(1,i)*sin(tetas(1)-tetap(i)));
 end
 
+%fase b
 Qsp_b=-(Vs(2)^2)*Bss(2,2);
 
 for i=[1,3]
@@ -146,7 +155,7 @@ for i=1:3
   Qsp_b=Qsp_b-Vs(2)*Vp(i)*(Bsp(2,i)*cos(tetas(2)-tetap(i))-Gsp(2,i)*sin(tetas(2)-tetap(i)));
 end
 
-
+%fase c
 Qsp_c=-(Vs(3)^2)*Gss(3,3);
 
 for i=[1,2]
@@ -166,10 +175,12 @@ H=jacobian(hp,[tetap tetas Vp Vs]);
 H=simplify(H);
 
 GradPps_a=gradient(Pps_a,[tetap tetas Vp Vs]);
-GradPps_a=subs(GradPps_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1]);
+GradPps_a=subs(GradPps_a,[tetap tetas Vp Vs],[teta3ph_p teta3ph_s 1 1 1 1 1 1]);
 
 
-%% fluxo direto
+%% substitui os valores simbolicoa do quadripolo pelos do trafo p para s
+%melhorar esta parte
+%admitância do transformador Gt+jBt
 %elementos da diagonal dos quadripolos
 auxg=Gt;
 auxb=Bt;
@@ -182,9 +193,9 @@ GradPps_a=subs(GradPps_a,[Bsp(1,1) Gsp(1,1) Bps(1,1) Gps(1,1)],[-auxb -auxg -aux
 %elementos fora da diagonal dos quadripolos 
 auxg=Gt*sqrt(3)/3;
 auxb=Bt*sqrt(3)/3;
-%a b
+%sp e ps ab
 GradPps_a=subs(GradPps_a,[Bsp(1,2) Gsp(1,2) Bps(1,2) Gps(1,2)],[0 0 auxb auxg]);
-%a c
+%sp e ps ac
 GradPps_a=subs(GradPps_a,[Bsp(1,3) Gsp(1,3) Bps(1,3) Gps(1,3)],[auxb auxg 0 0]);
 
 auxg=Gt/3;
@@ -194,13 +205,10 @@ GradPps_a=subs(GradPps_a,[Bss(1,2) Gss(1,2) Bpp(1,2) Gpp(1,2)],[-auxb -auxg 0 0]
 GradPps_a=subs(GradPps_a,[Bss(1,3) Gss(1,3) Bpp(1,3) Gpp(1,3)],[-auxb -auxg 0 0]);
 
 
-%% fluxo inverso
-
+%% substitui os valores simbolicoa do quadripolo pelos do trafo s para p
 
 GradPsp_a=gradient(Psp_a,[tetap tetas Vp Vs]);
-GradPsp_a=subs(GradPsp_a,[tetap tetas Vp Vs],[teta3phs teta3phs 1 1 1 1 1 1]);
-
-
+GradPsp_a=subs(GradPsp_a,[tetap tetas Vp Vs],[teta3ph_p teta3ph_s 1 1 1 1 1 1]);
 
 %elementos da diagonal dos quadripolos
 auxg=Gt;
